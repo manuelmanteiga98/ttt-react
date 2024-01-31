@@ -5,7 +5,8 @@ const JUGADOR2 = 'X';
 
 const Juego = () =>{
 
-    const [casillas, setCastillas] = useState(['','','','','','','','','']);
+    const [casillas, setCasillas] = useState(['','','','','','','','','']);
+    const [completo, setCompleto] = useState(false);
     const [turno, setTurno] = useState(false);
     const [ganador, setGanador] = useState(0);
 
@@ -25,6 +26,13 @@ const Juego = () =>{
         }
     };
 
+    const comprobarCompleto = (casillasActuales) => {
+        for (var i = 0; i < 9; i++) 
+            if (casillasActuales[i] === '') return;
+        setCompleto(true);
+    }
+    
+
     const handleClick = (index) =>{
         if(casillas[index]===''){
             let jugador;
@@ -33,31 +41,37 @@ const Juego = () =>{
             setTurno(!turno);
             var newCasillas= [...casillas];
             newCasillas[index]=jugador;
-            setCastillas(newCasillas);
+            setCasillas(newCasillas);
             comprobarVictoria(jugador, newCasillas);
+            comprobarCompleto(newCasillas);
         }
     }
 
     const reiniciar = () =>{
         setTurno(false);
+        setCompleto(false);
         setGanador(0);
-        setCastillas(['','','','','','','','','']);
+        setCasillas(['','','','','','','','','']);
     }
 
     return (
         <div className="contenedor2">
-        <div className="cabecera">
-            <button className="reiniciar" onClick={reiniciar}>Reiniciar</button>
-        </div>
         <div className="juego">
             {casillas.map(
                 (value, index) => 
-                <div className="casilla" onClick={()=>handleClick(index)}>
-                    <h1>{value}</h1>
+                <div className="casilla" key={index} onClick={(ganador===0)? ()=>handleClick(index) : undefined}>
+                    <h1 className="jugador">{value}</h1>
                 </div>
             )}
         </div>
-        { ganador ? <div>Enhorabuena { (ganador===1) ? 'JUGADOR1' : 'JUGADOR2'}!!</div> : ''}
+        <div className="opciones">
+            <img className="reset" 
+            src="https://cdn.pixabay.com/photo/2012/04/13/00/18/button-31199_960_720.png" 
+            onClick={reiniciar} alt="Imágen de reset"/>
+            { ganador ? <div className="victoria">Enhorabuena { (ganador===1) ? 'JUGADOR 1' : 'JUGADOR 2'}!!</div> : ''}
+            { (completo && ganador===0) ? <div className="victoria">Empate!!</div> : ''}
+        </div>
+        
         </div>
     );
 };
