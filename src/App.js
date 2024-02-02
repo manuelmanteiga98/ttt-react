@@ -1,10 +1,10 @@
-import './App.css';
-import Juego from './Juego';
+import "./App.css";
+import Juego from "./components/Juego";
 
 function App() {
   return (
-    <div className='contenedor'>
-      <Juego/>
+    <div className="contenedor">
+      <Juego />
     </div>
   );
 }
